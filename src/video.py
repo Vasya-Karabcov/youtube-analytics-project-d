@@ -1,6 +1,15 @@
 from src.channel import Channel
 
 
+class YouTubeError(Exception):
+
+    def __init__(self, *args, **kwargs):
+        self.message = args[0] if args else 'Нет такого id'
+
+    def __str__(self):
+        return self.message
+
+
 class Video:
 
     def __init__(self, video_id):
@@ -19,6 +28,17 @@ class Video:
 
     def __str__(self):
         return f'{self.title}'
+
+        try:
+            youtube = Channel.get_service()
+            video = youtube.videos().list(part='snippet,statistics,contentDetails,topicDetails',
+                                          id=video_id
+                                          ).execute()
+        except YTError as t_err:
+            self.title = None
+            self.url = None
+            self.like_count = None
+            self.view_count = None
 
 
 class PLVideo(Video):
