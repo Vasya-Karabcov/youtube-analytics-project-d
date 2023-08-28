@@ -21,24 +21,21 @@ class Video:
                                       id=video_id
                                       ).execute()
 
-        self.title = video['items'][0]['snippet']['title']
-        self.url_video = f'https://youtu.be/{self.video_id}'
-        self.view_count = video['items'][0]['statistics']['viewCount']
-        self.like_count = video['items'][0]['statistics']['likeCount']
+        try:
+            self.title = video['items'][0]['snippet']['title']
+            self.url_video = f'https://youtu.be/{self.video_id}'
+            self.view_count = video['items'][0]['statistics']['viewCount']
+            self.like_count = video['items'][0]['statistics']['likeCount']
+        except IndexError:
+            self.title = None
+            self.url_video = None
+            self.view_count = None
+            self.like_count = None
+
 
     def __str__(self):
         return f'{self.title}'
 
-        try:
-            youtube = Channel.get_service()
-            video = youtube.videos().list(part='snippet,statistics,contentDetails,topicDetails',
-                                          id=video_id
-                                          ).execute()
-        except YTError as t_err:
-            self.title = None
-            self.url = None
-            self.like_count = None
-            self.view_count = None
 
 
 class PLVideo(Video):
